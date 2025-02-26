@@ -1,0 +1,26 @@
+receivers:
+  filelog:
+    include:
+      - /var/log/flask/*.log  # Path to your Flask app logs
+    exclude: []
+    operators: []
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+
+exporters:
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+    line_format: "json"
+    labels:
+      job: flask
+      container: flask-container
+
+service:
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: [batch]
+      exporters: [loki]
