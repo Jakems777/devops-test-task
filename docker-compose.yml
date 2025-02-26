@@ -10,7 +10,15 @@ services:
           interval: 30s
           timeout: 5s
           retries: 3 
-          
+  grafana-alloy:
+   image: grafana/alloy:latest
+   command:
+     - --config.file=/etc/alloy/config.yaml
+   volumes:
+     - ./alloy-config.yml:/etc/alloy/config.yaml
+   ports:
+     - "4317:4317"        
+
   grafana-loki:
     image: grafana/loki:latest
     ports:

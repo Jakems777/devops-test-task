@@ -1,0 +1,23 @@
+server:
+  http_listen_port: 12345 
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317 
+      http:
+        endpoint: 0.0.0.0:4318 
+
+exporters:
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+    labels:
+      job: "flask-dummy"
+      service: "flask"
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]  
+      exporters: [loki]   
