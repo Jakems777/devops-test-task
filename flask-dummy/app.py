@@ -29,7 +29,7 @@ OTLP_ENDPOINT = os.getenv("OTLP_ENDPOINT", "http://grafana-alloy:4317")
 
 otlp_exporter = OTLPLogExporter(endpoint=OTLP_ENDPOINT, insecure=True)
 logger_provider.add_log_record_processor(BatchLogRecordProcessor(otlp_exporter))
-logging.basicConfig(filename='/var/log/flask/app.log', level=logging.INFO)
+
 
 handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
 logging.getLogger().addHandler(handler)
@@ -49,6 +49,7 @@ def post():
 
 @app.route('/health')
 def health():
+    logger.info("Receved Health request")
     return {"status": "healthy"}, 200
 
 
