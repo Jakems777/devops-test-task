@@ -11,7 +11,7 @@ receivers:
 
 exporters:
   loki:
-    endpoint: http://loki:3100/loki/api/v1/push
+    endpoint: http://grafana-loki:3100/loki/api/v1/push
     labels:
       job: "flask-dummy"
       service: "flask"
