@@ -25,17 +25,24 @@ logger_provider = LoggerProvider(
 )
 set_logger_provider(logger_provider)
 
-OTLP_ENDPOINT = os.getenv("OTLP_ENDPOINT", "http://grafana-alloy:4317")
+OTLP_ENDPOINT = os.getenv("OTLP_ENDPOINT", "grafana-alloy:4317")
 
 otlp_exporter = OTLPLogExporter(endpoint=OTLP_ENDPOINT, insecure=True)
 logger_provider.add_log_record_processor(BatchLogRecordProcessor(otlp_exporter))
 
 
-handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
-logging.getLogger().addHandler(handler)
+otel_handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
+#logging.getLogger().addHandler(handler)
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+
 
 logger = logging.getLogger("flask-dummy")
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(otel_handler)
 
 @app.route('/get')
 def get():
